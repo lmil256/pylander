@@ -11,7 +11,7 @@ def main():
     clock = pygame.time.Clock()
     surface = pygame.display.set_mode((800, 600))
     player = Ship(Vector2(0, 0))
-    camera = Camera(Vector2(0, -50))
+    camera = Camera(Vector2(0, 0))
     level = Level()
     dt = 0
     while True:
@@ -19,7 +19,8 @@ def main():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
-        surface.fill(pygame.Color(0))
+
+        surface.fill(0x000000)
 
         player.update(dt)
         camera.draw_thing(surface, level)
