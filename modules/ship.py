@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import *
-from pygame.math import Vector2
+from pygame.math import *
 
 class Ship():
     def __init__(self, pos):
@@ -20,6 +20,6 @@ class Ship():
         self.position += self.velocity*dt + (acceleration * dt**2)/2
         self.velocity += acceleration*dt
 
-        if self.position.y > 599:
-            self.position.y = 599
+        if self.position.y > 0:
+            self.position.y = 0
             self.velocity.y = 0
