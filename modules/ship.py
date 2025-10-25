@@ -1,23 +1,25 @@
 import pygame
 from pygame.locals import *
+from pygame.math import Vector2
 
-class Ship(pygame.Rect):
-    def __init__(self, start_x, start_y):
-        super().__init__(0, 0, 10, 20)
-        self.centerx = start_x
-        self.bottom = start_y
-        self.velocity = 0.0
-        self.acceleration = 2.0 
-        self.position = float(start_y)
+class Ship():
+    def __init__(self, pos):
+        self.position = pos
+        self.velocity = Vector2()
+        self.gravity = Vector2(y=5)
+        self.thrust = Vector2()
+        self.lines = ((Vector2(-5, 0), Vector2(5, 0)), (Vector2(5, 0), Vector2(0, -15)), (Vector2(0, -15), Vector2(-5, 0)))
 
     def update(self, dt):
         if pygame.key.get_pressed()[K_UP]:
-            self.acceleration = -5
+            self.thrust.y = -10
         else:
-            self.acceleration = 2
-        self.position += self.velocity*dt + (self.acceleration * dt**2)/2
-        self.velocity += self.acceleration*dt
-        self.bottom = self.position
-        if self.position > 600:
-            self.position = 600.0
-            self.velocity = 0
+            self.thrust.y = 0
+
+        acceleration = self.thrust+self.gravity
+        self.position += self.velocity*dt + (acceleration * dt**2)/2
+        self.velocity += acceleration*dt
+
+        if self.position.y > 599:
+            self.position.y = 599
+            self.velocity.y = 0
