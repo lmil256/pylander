@@ -11,9 +11,10 @@ def main():
     clock = pygame.time.Clock()
     surface = pygame.display.set_mode((800, 600))
     player = Ship(Vector2(0, 0))
-    camera = Camera(Vector2(0, 0))
+    camera = Camera(Vector2(0, 50))
     level = Level()
     dt = 0
+
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -25,6 +26,7 @@ def main():
         player.update(dt)
         camera.draw_thing(surface, level)
         camera.draw_thing(surface, player)
+        camera.draw_thing(surface, player.flame)
         pygame.display.update()
         dt = clock.tick(60)/1000
 
