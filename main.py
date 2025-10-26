@@ -8,6 +8,7 @@ from modules.level import Level
 
 def main():
     pygame.init()
+
     clock = pygame.time.Clock()
     surface = pygame.display.set_mode((800, 600))
     player = Ship(Vector2(0, 0))
@@ -21,12 +22,13 @@ def main():
                 pygame.quit()
                 sys.exit()
 
-        surface.fill(0x000000)
-
         player.update(dt)
+
+        surface.fill(0x000000)
         camera.draw_thing(surface, level)
         camera.draw_thing(surface, player)
         camera.draw_thing(surface, player.flame)
+
         pygame.display.update()
         dt = clock.tick(60)/1000
 
