@@ -2,20 +2,20 @@ import math
 import pygame
 from pygame.locals import *
 from pygame.math import *
-from modules.gameobject import GameObject
 
 MAX_THRUST = 5
+ANGLES_PER_SEC = 45
 MOON_GRAVITY = -1.62
 
-class Ship(GameObject):
+class Ship():
     def __init__(self, position):
         self.position = position
         self.scale = 1
-        self.angle = 0
+        self.angle = 90
         self.velocity = Vector2()
         self.gravity = Vector2(y=MOON_GRAVITY)
         self.thrust = Vector2()
-        self.lines = ((Vector2(-5, 0), Vector2(5, 0)), (Vector2(5, 0), Vector2(0, 15)), (Vector2(0, 15), Vector2(-5, 0)))
+        self.lines = ((Vector2(0, 5), Vector2(0, -5)), (Vector2(0, -5), Vector2(15, 0)), (Vector2(15, 0), Vector2(0, 5)))
         self.flame = Flame(self.position)
 
     def get_lines(self):
@@ -24,16 +24,19 @@ class Ship(GameObject):
                + self.flame.get_lines()
 
     def update(self, dt):
-        if pygame.key.get_pressed()[K_RIGHT] and not pygame.key.get_pressed()[K_LEFT]:
-            self.angle = (self.angle - 45*dt) % 360
-            self.flame.angle = (self.angle - 45*dt) % 360
-        elif pygame.key.get_pressed()[K_LEFT] and not pygame.key.get_pressed()[K_RIGHT]:
-            self.angle = (self.angle + 45*dt) % 360
-            self.flame.angle = (self.angle + 45*dt) % 360
+        rotation = 0
+
+        if pygame.key.get_pressed()[K_LEFT]:
+            rotation += ANGLES_PER_SEC*dt
+        if pygame.key.get_pressed()[K_RIGHT]:
+            rotation -= ANGLES_PER_SEC*dt
+
+        self.angle = (self.angle + rotation) % 360
+        self.flame.angle = (self.angle + rotation) % 360
 
         if pygame.key.get_pressed()[K_UP]:
-            self.thrust.x = MAX_THRUST*math.cos(math.radians(self.angle+90))
-            self.thrust.y = MAX_THRUST*math.sin(math.radians(self.angle+90))
+            self.thrust.x = MAX_THRUST*math.cos(math.radians(self.angle))
+            self.thrust.y = MAX_THRUST*math.sin(math.radians(self.angle))
             self.flame.scale = 1
         else:
             self.thrust.x = 0
@@ -55,7 +58,7 @@ class Flame():
         self.position = position
         self.scale = 0
         self.angle = 0
-        self.lines = ((Vector2(-4, 0), Vector2(4, 0)), (Vector2(4, 0), Vector2 (0, -10)), (Vector2(0, -10), Vector2(-4, 0))) 
+        self.lines = ((Vector2(0, 4), Vector2(0, -4)), (Vector2(0, -4), Vector2 (-10, 0)), (Vector2(-10, 0), Vector2(0, 4))) 
 
     def get_lines(self):
         if self.scale != 0:
