@@ -2,11 +2,12 @@ import math
 import pygame
 from pygame.locals import *
 from pygame.math import *
+from modules.gameobject import GameObject
 
 MAX_THRUST = 5
 MOON_GRAVITY = -1.62
 
-class Ship():
+class Ship(GameObject):
     def __init__(self, position):
         self.position = position
         self.scale = 1
@@ -16,6 +17,11 @@ class Ship():
         self.thrust = Vector2()
         self.lines = ((Vector2(-5, 0), Vector2(5, 0)), (Vector2(5, 0), Vector2(0, 15)), (Vector2(0, 15), Vector2(-5, 0)))
         self.flame = Flame(self.position)
+
+    def get_lines(self):
+        return tuple((line[0].rotate(self.angle)*self.scale + self.position, \
+                      line[1].rotate(self.angle)*self.scale + self.position) for line in self.lines) \
+               + self.flame.get_lines()
 
     def update(self, dt):
         if pygame.key.get_pressed()[K_RIGHT] and not pygame.key.get_pressed()[K_LEFT]:
@@ -46,6 +52,14 @@ class Ship():
 
 class Flame():
     def __init__(self, position):
-        self.lines = ((Vector2(-4, 0), Vector2(4, 0)), (Vector2(4, 0), Vector2 (0, -10)), (Vector2(0, -10), Vector2(-4, 0))) 
+        self.position = position
         self.scale = 0
         self.angle = 0
+        self.lines = ((Vector2(-4, 0), Vector2(4, 0)), (Vector2(4, 0), Vector2 (0, -10)), (Vector2(0, -10), Vector2(-4, 0))) 
+
+    def get_lines(self):
+        if self.scale != 0:
+            return tuple((line[0].rotate(self.angle)*self.scale + self.position, \
+                          line[1].rotate(self.angle)*self.scale + self.position) for line in self.lines)
+
+        return ()

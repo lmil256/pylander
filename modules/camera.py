@@ -15,10 +15,10 @@ class Camera:
         return self.canvas_height/self.zoom
 
     def draw_thing(self, surface, thing):
-        for line in thing.lines:
+        for line in thing.get_lines():
             # Convert coordinates to camera space
-            line_start = line[0].rotate(thing.angle)*thing.scale + thing.position - self.position
-            line_end = line[1].rotate(thing.angle)*thing.scale + thing.position - self.position
+            line_start = line[0]-self.position
+            line_end = line[1]-self.position
             # Convert coordinates to NDC
             line_start.x = (line_start.x + self.get_canvas_width()/2)/self.get_canvas_width()
             line_start.y = (line_start.y + self.get_canvas_height()/2)/self.get_canvas_height()
