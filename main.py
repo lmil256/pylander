@@ -27,7 +27,6 @@ def main():
         surface.fill(0x000000)
         camera.draw_thing(surface, level)
         camera.draw_thing(surface, player)
-        camera.draw_thing(surface, player.flame)
 
         pygame.display.update()
         dt = clock.tick(60)/1000

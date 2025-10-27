@@ -31,8 +31,7 @@ class Ship():
         if pygame.key.get_pressed()[K_RIGHT]:
             rotation -= ANGLES_PER_SEC*dt
 
-        self.angle = (self.angle + rotation) % 360
-        self.flame.angle = (self.angle + rotation) % 360
+        self.angle = (self.angle+rotation)%360
 
         if pygame.key.get_pressed()[K_UP]:
             self.thrust.x = MAX_THRUST*math.cos(math.radians(self.angle))
@@ -45,13 +44,15 @@ class Ship():
 
         acceleration = self.thrust+self.gravity
         self.position += self.velocity*dt + (acceleration * dt**2)/2
-        self.flame.position = self.position
         self.velocity += acceleration*dt
 
         if self.position.y < 0:
             self.position.y = 0
             self.velocity.x = 0
             self.velocity.y = 0
+
+        self.flame.angle = self.angle
+        self.flame.position = self.position
 
 class Flame():
     def __init__(self, position):
